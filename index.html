@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المدافع لتنظيف المنازل والشركات | CleanMaster Pro</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#0ea5e9',
+                        dark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .video-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+    </style>
+    <meta name="description" content="خدمات تنظيف المنازل والشركات باحترافية وعناية بالتفاصيل. تواصل معنا لمعرفة خدمات التنظيف المتاحة.">
+</head>
+<body class="bg-slate-900 text-slate-100 overflow-x-hidden">
+    <div id="root"></div>
+
+    <script>
+        const { useState, useEffect } = React;
+        const { motion, AnimatePresence } = window.FramerMotion || window.Motion;
+
+        const translations = {
+            ar: {
+                brand: "كلين ماستر",
+                tagline: "الخدمة الاحترافية الأولى لتنظيف المنازل والشركات",
+                home: "الرئيسية",
+                services: "خدماتنا",
+                about: "من نحن",
+                contact: "اتصل بنا",
+                cta: "احجز موعدك الآن",
+                heroTitle: "نمنح منزلك بريقاً ونقاءً لا يضاهى",
+                heroDesc: "خدمات تنظيف شاملة ومتطورة بأحدث التقنيات والمعايير العالمية لراحة بالك.",
+                servicesTitle: "خدماتنا الاحترافية",
+                servicesSubtitle: "نقدم باقة متكاملة من خدمات التنظيف لتلبي كافة احتياجاتك بدقة وسرعة.",
+                s1Title: "تنظيف المنازل",
+                s1Desc: "تنظيف شامل وعميق لكل أركان المنزل بأيدي أمهر الفنيين.",
+                s2Title: "تنظيف الشركات والمكاتب",
+                s2Desc: "بيئة عمل نظيفة ومحفزة للإنتاجية وخالية من الأتربة.",
+                s3Title: "غسيل السجاد والمفروشات",
+                s3Desc: "استعادة رونق السجاد وإزالة البقع الصعبة بأجهزة البخار.",
+                s4Title: "تعقيم وتطهير",
+                s4Desc: "مواتيد تعقيم آمنة تقضي على الجراثيم والفيروسات بنسبة 99.9%.",
+                aboutTitle: "لماذا تختار كلين ماستر؟",
+                aboutDesc: "نحن نؤمن بأن النظافة ليست مجرد خدمة، بل هي نمط حياة. نعتمد على مواد آمنة وفريق مدرب بحرفية عالية.",
+                stat1: "عميل راضٍ",
+                stat2: "مشهود بالاحترافية",
+                stat3: "ضمان الجودة",
+                contactTitle: "تواصل معنا اليوم",
+                contactDesc: "جاهزون للرد على استفساراتكم وخدمتكم على مدار الساعة.",
+                namePlaceholder: "اسمك الكريم",
+                phonePlaceholder: "رقم الهاتف",
+                sendBtn: "إرسال الطلب",
+                rights: "جميع الحقوق محفوظة © 2024 كلين ماستر"
+            },
+            en: {
+                brand: "CleanMaster",
+                tagline: "The Premier Professional Cleaning Service",
+                home: "Home",
+                services: "Services",
+                about: "About Us",
+                contact: "Contact",
+                cta: "Book Now",
+                heroTitle: "We Give Your Home Unmatched Sparkle & Purity",
+                heroDesc: "Comprehensive and advanced cleaning services using cutting-edge technologies and global standards.",
+                servicesTitle: "Our Professional Services",
+                servicesSubtitle: "We offer an integrated package of cleaning services to meet your needs accurately.",
+                s1Title: "Home Cleaning",
+                s1Desc: "Comprehensive deep cleaning for every corner by expert technicians.",
+                s2Title: "Office & Corporate Cleaning",
+                s2Desc: "Clean, dust-free work environments that boost productivity.",
+                s3Title: "Carpet & Upholstery",
+                s3Desc: "Restore carpet elegance and remove tough stains with steam.",
+                s4Title: "Sanitization & Disinfection",
+                s4Desc: "Safe sanitization products eliminating 99.9% of germs and viruses.",
+                aboutTitle: "Why Choose CleanMaster?",
+                aboutDesc: "We believe cleanliness is a lifestyle. We rely on safe materials and highly trained teams.",
+                stat1: "Happy Clients",
+                stat2: "Professional Staff",
+                stat3: "Quality Guarantee",
+                contactTitle: "Get In Touch Today",
+                contactDesc: "Ready to answer your inquiries and serve you 24/7.",
+                namePlaceholder: "Your Name",
+                phonePlaceholder: "Phone Number",
+                sendBtn: "Send Request",
+                rights: "All rights reserved © 2024 CleanMaster"
+            }
+        };
+
+        function App() {
+            const [lang, setLang] = useState('ar');
+            const [isScrolled, setIsScrolled] = useState(false);
+            const t = translations[lang];
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    if (window.scrollY > 50) {
+                        setIsScrolled(true);
+                    } else {
+                        setIsScrolled(false);
+                    }
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const toggleLang = () => {
+                const newLang = lang === 'ar' ? 'en' : 'ar';
+                setLang(newLang);
+                document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
+                document.documentElement.lang = newLang;
+            };
+
+            return React.createElement('div', { className: 'min-h-screen bg-slate-900 text-slate-100 font-cairo' },
+                // Header / Navbar
+                React.createElement(motion.header, {
+                    initial: { y: -100 },
+                    animate: { y: 0 },
+                    transition: { duration: 0.5 },
+                    className: `fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-slate-900/90 backdrop-blur-md shadow-lg py-3' : 'bg-transparent py-4'}`
+                },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto px-6 flex justify-between items-center' },
+                        React.createElement('div', { className: 'flex items-center gap-3' },
+                            React.createElement('div', { className: 'bg-primary p-2 rounded-xl text-white' },
+                                React.createElement('i', { 'data-lucide': 'sparkles', className: 'w-5 h-5' })
+                            ),
+                            React.createElement('span', { className: 'text-xl font-black tracking-wider text-white' }, t.brand)
+                        ),
+                        React.createElement('nav', { className: 'hidden md:flex items-center gap-8 font-semibold text-slate-300 text-sm' },
+                            React.createElement('a', { href: '#home', className: 'hover:text-primary transition-colors' }, t.home),
+                            React.createElement('a', { href: '#services', className: 'hover:text-primary transition-colors' }, t.services),
+                            React.createElement('a', { href: '#about', className: 'hover:text-primary transition-colors' }, t.about),
+                            React.createElement('a', { href: '#contact', className: 'hover:text-primary transition-colors' }, t.contact)
+                        ),
+                        React.createElement('div', { className: 'flex items-center gap-3' },
+                            React.createElement('button', {
+                                onClick: toggleLang,
+                                className: 'px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 hover:bg-primary/20 text-primary font-bold text-xs transition-all'
+                            }, lang === 'ar' ? 'English' : 'العربية'),
+                            React.createElement('a', {
+                                href: '#contact',
+                                className: 'hidden sm:inline-block bg-primary hover:bg-sky-600 text-white px-4 py-2 rounded-full font-bold text-sm shadow-lg shadow-primary/30 transition-all'
+                            }, t.cta)
+                        )
+                    )
+                ),
+
+                // Hero Section made smaller (min-h-[50vh] instead of min-h-[70vh], smaller padding)
+                React.createElement('section', { id: 'home', className: 'relative isolate min-h-[50vh] pt-24 pb-12 flex items-center justify-center text-center overflow-hidden' },
+                    React.createElement('video', {
+                        autoPlay: true,
+                        muted: true,
+                        loop: true,
+                        playsInline: true,
+                        className: 'video-bg'
+                    },
+                        React.createElement('source', { src: 'hero-video.mp4', type: 'video/mp4' })
+                    ),
+                    React.createElement('div', { className: 'absolute inset-0 bg-slate-950/75 z-[1]' }),
+                    React.createElement(motion.div, {
+                        initial: { opacity: 0, y: 20 },
+                        animate: { opacity: 1, y: 0 },
+                        transition: { duration: 0.6, delay: 0.1 },
+                        className: 'relative z-10 max-w-2xl mx-auto px-6'
+                    },
+                        React.createElement('span', { className: 'bg-primary/20 border border-primary/50 text-primary px-3 py-1 rounded-full text-xs font-bold inline-block mb-3' }, t.tagline),
+                        React.createElement('h1', { className: 'text-2xl md:text-4xl font-black text-white mb-3 leading-tight' }, t.heroTitle),
+                        React.createElement('p', { className: 'text-sm md:text-base text-slate-300 mb-6 max-w-lg mx-auto' }, t.heroDesc),
+                        React.createElement('div', { className: 'flex flex-col sm:flex-row justify-center gap-3' },
+                            React.createElement('a', {
+                                href: '#services',
+                                className: 'bg-primary hover:bg-sky-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-primary/30 transition-all'
+                            }, t.services),
+                            React.createElement('a', {
+                                href: '#contact',
+                                className: 'bg-slate-800/80 hover:bg-slate-800 border border-slate-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm backdrop-blur-sm transition-all'
+                            }, t.cta)
+                        )
+                    )
+                ),
+
+                // Services Section
+                React.createElement('section', { id: 'services', className: 'py-20 bg-slate-900 relative' },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto px-6' },
+                        React.createElement('div', { className: 'text-center max-w-3xl mx-auto mb-16' },
+                            React.createElement('h2', { className: 'text-3xl md:text-5xl font-black text-white mb-4' }, t.servicesTitle),
+                            React.createElement('p', { className: 'text-slate-400 text-lg' }, t.servicesSubtitle)
+                        ),
+                        React.createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8' },
+                            [
+                                { title: t.s1Title, desc: t.s1Desc, icon: 'home' },
+                                { title: t.s2Title, desc: t.s2Desc, icon: 'briefcase' },
+                                { title: t.s3Title, desc: t.s3Desc, icon: 'layers' },
+                                { title: t.s4Title, desc: t.s4Desc, icon: 'shield-check' }
+                            ].map((s, idx) =>
+                                React.createElement(motion.div, {
+                                    key: idx,
+                                    whileHover: { y: -10 },
+                                    className: 'bg-slate-800/50 border border-slate-700/60 p-8 rounded-2xl backdrop-blur-sm relative group hover:border-primary transition-all'
+                                },
+                                    React.createElement('div', { className: 'w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-6 group-hover:bg-primary group-hover:text-white transition-all' },
+                                        React.createElement('i', { 'data-lucide': s.icon, className: 'w-7 h-7' })
+                                    ),
+                                    React.createElement('h3', { className: 'text-xl font-bold text-white mb-3' }, s.title),
+                                    React.createElement('p', { className: 'text-slate-400 text-sm leading-relaxed' }, s.desc)
+                                )
+                            )
+                        )
+                    )
+                ),
+
+                // About Section
+                React.createElement('section', { id: 'about', className: 'py-20 bg-slate-950 relative overflow-hidden' },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center' },
+                        React.createElement('div', null,
+                            React.createElement('span', { className: 'text-primary font-bold text-sm tracking-widest uppercase mb-3 block' }, t.about),
+                            React.createElement('h2', { className: 'text-3xl md:text-4xl font-black text-white mb-6' }, t.aboutTitle),
+                            React.createElement('p', { className: 'text-slate-300 text-lg mb-8 leading-relaxed' }, t.aboutDesc),
+                            React.createElement('div', { className: 'grid grid-cols-3 gap-6 border-t border-slate-800 pt-8' },
+                                [
+                                    { num: '500+', label: t.stat1 },
+                                    { num: '100%', label: t.stat2 },
+                                    { num: '24/7', label: t.stat3 }
+                                ].map((stat, i) =>
+                                    React.createElement('div', { key: i },
+                                        React.createElement('h4', { className: 'text-2xl md:text-3xl font-black text-primary mb-1' }, stat.num),
+                                        React.createElement('p', { className: 'text-slate-400 text-xs md:text-sm font-medium' }, stat.label)
+                                    )
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: 'relative' },
+                            React.createElement('div', { className: 'absolute -inset-4 bg-primary/20 rounded-3xl blur-2xl z-0' }),
+                            React.createElement('img', {
+                                src: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=800&q=80',
+                                alt: 'Cleaning Professional',
+                                className: 'relative z-10 rounded-2xl shadow-2xl border border-slate-700 w-full object-cover h-[400px]'
+                            })
+                        )
+                    )
+                ),
+
+                // Contact Section
+                React.createElement('section', { id: 'contact', className: 'py-20 bg-slate-900 relative' },
+                    React.createElement('div', { className: 'max-w-4xl mx-auto px-6 text-center' },
+                        React.createElement('h2', { className: 'text-3xl md:text-5xl font-black text-white mb-4' }, t.contactTitle),
+                        React.createElement('p', { className: 'text-slate-400 text-lg mb-12' }, t.contactDesc),
+                        React.createElement('form', {
+                            onSubmit: (e) => { e.preventDefault(); alert(lang === 'ar' ? 'تم إرسال طلبك بنجاح! سنتواصل معك قريباً.' : 'Request sent successfully! We will contact you soon.'); },
+                            className: 'bg-slate-800/50 border border-slate-700 p-8 md:p-12 rounded-3xl backdrop-blur-sm grid grid-cols-1 md:grid-cols-2 gap-6 text-right'
+                        },
+                            React.createElement('div', null,
+                                React.createElement('label', { className: 'block text-slate-300 font-semibold mb-2 text-sm' }, t.namePlaceholder),
+                                React.createElement('input', {
+                                    type: 'text',
+                                    required: true,
+                                    placeholder: t.namePlaceholder,
+                                    className: 'w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary transition-all'
+                                })
+                            ),
+                            React.createElement('div', null,
+                                React.createElement('label', { className: 'block text-slate-300 font-semibold mb-2 text-sm' }, t.phonePlaceholder),
+                                React.createElement('input', {
+                                    type: 'tel',
+                                    required: true,
+                                    placeholder: t.phonePlaceholder,
+                                    className: 'w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary transition-all'
+                                })
+                            ),
+                            React.createElement('div', { className: 'md:col-span-2' },
+                                React.createElement('button', {
+                                    type: 'submit',
+                                    className: 'w-full bg-primary hover:bg-sky-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/30 transition-all text-lg'
+                                }, t.sendBtn)
+                            )
+                        )
+                    )
+                ),
+
+                // Footer
+                React.createElement('footer', { className: 'bg-slate-950 py-8 border-t border-slate-800 text-center text-slate-500 text-sm' },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto px-6' },
+                        React.createElement('p', null, t.rights)
+                    )
+                )
+            );
+        }
+
+        const root = document.getElementById('root');
+        ReactDOM.createRoot(root).render(React.createElement(App));
+        
+        setTimeout(() => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        }, 100);
+    </script>
+</body>
+</html>
